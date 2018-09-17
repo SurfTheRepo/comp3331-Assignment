@@ -1,0 +1,31 @@
+File to remind me where i currently am up to etc
+
+
+stuff to still implement:
+	1. 3way handshake.  syn, synack, ack.
+
+	2. 4way disconnect. fin, ack, fin, ack
+		will come from sender after file transmitted.
+
+	3. timeout operation, which uses RRT-est and RTO est,
+		use formula . TimeoutInterval = EstimatedRTT + 4 * DevRTT).
+		 Use the initial value of EstimatedRTT = 500 milliseconds and DevRTT = 250 milliseconds.
+
+	4. Sender need features from sec 3.5.4 excpt doublin the timeout
+
+	5. receiver uses 3.5.4features. do immediate packet acks
+
+	6. inc sequence number and ack number in header of segments
+
+	7. Need a maxSegSize, which is max size of data, w/o header
+
+	8. Max window size, field for sender. max number of unACk
+		bytes that sender can have at a time. ie need to wait
+		for bytes to be acked before sending more,
+		can resend tho.
+
+	--DONT NEED FLOW OR CONGESTION CONTROL
+
+
+	Segment header:
+		- up to me, defs need seq and ack nums, flags.

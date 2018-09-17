@@ -1,4 +1,1 @@
-msg="helloWorld"
-print(msg)
-
-
+#!/usr/bin/python3\
