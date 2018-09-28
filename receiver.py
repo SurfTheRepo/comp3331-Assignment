@@ -2,8 +2,10 @@
 
 import socket
 import sys
-from packetHandler import deconstructPacket
-
+from packetHandler import *
+from connectionTests import *
+from fileReadWrite import *
+import re
 
 receiver_port = int(sys.argv[1])
 file_r = sys.argv[2]
@@ -14,16 +16,28 @@ sock.bind(server_address)
 
 print('starting up on {} port {}'.format(*server_address))
 
+fileContents = ''
+
 while True:
-    print('\nwaiting to recieve message')
-    packet, address = sock.recvfrom(4096)
 
-    #turning packet into data
-    header, data = deconstructPacket(packet)
-    # print("header:{} \n headersize:{}".format( header, len(bytes(header,'utf-8'))))
-    print("header:", header)
-    print("data:", data)
+    print("waiting for connection attempt")
+    connection = receiverInit(sock, receiver_port)
+    while connection == True:
+
+        print('\nwaiting to recieve message')
+        packet = sock.recv(4096)
+
+        header, data = deconstructPacket(packet)
+
+        port, seqNum, typeOfPacket = headerHandler(header)
+        if typeOfPacket == "FIN":
+            connection = receiverFinish(sock, receiver_port) 
+        else:
+            #Ack the packet and save the file
+            ackResponse = sock.sendto(ackGenerator(seqNum), ('localhost', int(port)))
+            fileContents+=data
+    fileContents = bytes(fileContents, 'utf-8')        
+    fileWriter("testWRITER.pdf", fileContents)
 
 
-    
 

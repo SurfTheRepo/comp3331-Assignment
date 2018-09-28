@@ -7,12 +7,15 @@ def fileReader(fileName):
     for line in fh:
         fileContents += str(line)
     fh.close()
-    print(fileContents)
+    # print(fileContents)
+
+    # fileWriter("testWriter.pdf", fileContents)
     return fileContents
         
 
 def fileWriter(fileName, contents):
-    fh = open(fileName, "wb")
-    fh.write(contents)
+    fh = open(fileName, "w")
+    for line in contents:
+        fh.write(line)
     fh.close()
 
