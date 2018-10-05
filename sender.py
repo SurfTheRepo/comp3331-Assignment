@@ -34,10 +34,10 @@ sock.bind(sender_address)
 
 
 #getting content from pdf
-fileContents = fileReader(fileName)
+fileContents = fileReader(fileName, maxSegSize)
 
 # turning content into packets
-arrayOfPackets = generatePackets(fileContents, maxSegSize, sender_address)
+arrayOfPackets = generatePackets(fileContents, sender_address)
 
 
 
@@ -47,7 +47,7 @@ connection = senderInit(sock, receiver_address, sender_address)
 if connection:
     print("connection succesful")
     print("Sending from Address:", sender_address)
-    print("Sending file {}, of size {} to {}".format(fileName, len(fileContents), receiver_address))
+    print("Sending file {}, of size {} to {}".format(fileName, sys.getsizeof(fileContents), receiver_address))
     
     i = 0
     for packet in arrayOfPackets:

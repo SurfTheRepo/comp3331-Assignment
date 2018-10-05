@@ -16,27 +16,27 @@ sock.bind(server_address)
 
 print('starting up on {} port {}'.format(*server_address))
 
-fileContents = ''
+
 
 while True:
 
     print("waiting for connection attempt")
     connection = receiverInit(sock, receiver_port)
+    fileContents = []
     while connection == True:
 
-        print('\nwaiting to recieve message')
-        packet = sock.recv(4096)
-
-        header, data = deconstructPacket(packet)
-
-        port, seqNum, typeOfPacket = headerHandler(header)
-        if typeOfPacket == "FIN":
-            connection = receiverFinish(sock, receiver_port) 
+        # print('\nwaiting to recieve message')
+        pickledPacket = sock.recv(4096)
+        packetObj = pickle.loads(pickledPacket)
+        
+        print("packet: \n    seqNum: {}\n    flag:{}".format(packetObj.seqNum, packetObj.flag))
+        if packetObj.flag == "FIN":
+            connection = receiverFinish(sock, receiver_port, packetObj.seqNum)  
         else:
             #Ack the packet and save the file
-            ackResponse = sock.sendto(ackGenerator(seqNum), ('localhost', int(port)))
-            fileContents+=data
-    fileContents = bytes(fileContents, 'utf-8')        
+            ackResponse = sock.sendto(ackGenerator(packetObj.seqNum), ('localhost', int(packetObj.port)))
+            fileContents.append(packetObj.data)
+    # fileContents = bytes(fileContents, 'utf-8')        
     fileWriter("testWRITER.pdf", fileContents)
 
 
