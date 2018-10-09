@@ -7,3 +7,10 @@ class Packet:
         self.flag = flag
         self.size = size
         self.data = data
+
+        self.checkSum = 1
+
+    def checksum(self):
+        print()
+        # bleh
+
